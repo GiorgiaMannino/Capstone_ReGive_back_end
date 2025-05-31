@@ -41,7 +41,7 @@ public class FavoriteService {
         return toResponse(saved);
     }
 
-    @Transactional  // ✅ IMPORTANTE: abilita la transazione per la rimozione
+    @Transactional
     public void removeFavorite(Long userId, Long articleId) {
         AppUser user = appUserRepository.findById(userId).orElseThrow();
         Article article = articleRepository.findById(articleId).orElseThrow();

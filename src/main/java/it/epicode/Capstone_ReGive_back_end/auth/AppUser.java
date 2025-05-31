@@ -37,11 +37,10 @@ public class AppUser implements UserDetails {
     private Set<Role> roles;
 
 
-    // 👇👇 NUOVI CAMPI PER IL PROFILO
     @Column(length = 1000)
     private String description;
 
-    @Column(columnDefinition = "TEXT") // se usi base64, altrimenti VARCHAR per un URL
+    @Column(columnDefinition = "TEXT")
     private String profileImage;
 
 
@@ -64,7 +63,6 @@ public class AppUser implements UserDetails {
         this.roles = roles;
     }
 
-    // 🔄 RESTA invariato, usi l'email per autenticarti
     @Override
     public String getUsername() {
         return this.email;

@@ -39,33 +39,28 @@ public class AppUserService {
     public void registerUser(String email, String username, String password, Set<Role> roles) {
         Map<String, String> errors = new HashMap<>();
 
-        // Validazione email
         if (email == null || email.isBlank() || !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
             errors.put("email", "Email non valida");
         } else if (appUserRepository.existsByEmail(email)) {
             errors.put("email", "Email già in uso");
         }
 
-        // Validazione username
         if (username == null || username.isBlank() || username.length() < 3 || username.length() > 20) {
             errors.put("username", "Username deve avere tra 3 e 20 caratteri");
         } else if (appUserRepository.existsByUsername(username)) {
             errors.put("username", "Username già in uso");
         }
 
-        // Validazione password
         if (!isValidPassword(password)) {
             errors.put("password", "Password non valida. Deve avere almeno 7 caratteri, una maiuscola e un numero.");
         }
 
-        // Se ci sono errori, li stampo per debug e lancio eccezione
         if (!errors.isEmpty()) {
             System.out.println("❌ Errori nella registrazione utente:");
             errors.forEach((k, v) -> System.out.println("- " + k + ": " + v));
             throw new MultipleFieldsConflictException(errors);
         }
 
-        // Creazione e salvataggio utente
         AppUser user = new AppUser();
         user.setEmail(email);
         user.setUsername(username);
@@ -92,7 +87,6 @@ public class AppUserService {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return jwtTokenUtil.generateToken(userDetails);
         } catch (AuthenticationException e) {
-            // Lancia un'eccezione standard di Spring Security per credenziali errate
             throw new BadCredentialsException("Credenziali non valide");
         }
     }

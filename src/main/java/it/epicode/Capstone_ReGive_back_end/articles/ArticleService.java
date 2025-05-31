@@ -6,7 +6,6 @@ import it.epicode.Capstone_ReGive_back_end.cloudinary.CloudinaryService;
 import it.epicode.Capstone_ReGive_back_end.favorites.Favorite;
 import it.epicode.Capstone_ReGive_back_end.favorites.FavoriteRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -168,7 +167,7 @@ public class ArticleService {
     }
 
     public List<ArticleResponse> getArticlesExcludingCurrentUser() {
-        Long currentUserId = getCurrentUserId(); // <-- se null, non va bene
+        Long currentUserId = getCurrentUserId();
 
         if (currentUserId == null) {
             throw new IllegalStateException("Utente non autenticato.");
@@ -213,7 +212,6 @@ public class ArticleService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Articolo non trovato con ID: " + id));
 
-        // ✅ Rimuovi tutti i preferiti che fanno riferimento a questo articolo
         List<Favorite> favoritesToDelete = favoriteRepository.findAll()
                 .stream()
                 .filter(f -> f.getArticle().getId().equals(id))
@@ -221,14 +219,11 @@ public class ArticleService {
 
         favoriteRepository.deleteAll(favoritesToDelete);
 
-        // ✅ Rimuovi le immagini da Cloudinary (se presenti)
         if (article.getImageUrls() != null) {
             for (String imageUrl : article.getImageUrls()) {
                 cloudinaryService.deleteImage(imageUrl);
             }
         }
-
-        // ✅ Elimina l'articolo dal database
         articleRepository.delete(article);
     }
 

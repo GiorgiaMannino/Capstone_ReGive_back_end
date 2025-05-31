@@ -24,13 +24,13 @@ public class ProfileController {
     }
 
     @GetMapping("/users/{userId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
     public ResponseEntity<ProfileResponse> getUserProfileById(@PathVariable Long userId) {
         return ResponseEntity.ok(profileService.getProfile(userId));
     }
 
     @PutMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
     public ResponseEntity<ProfileResponse> updateProfileImage(
             @AuthenticationPrincipal AppUser user,
             @RequestPart("file") MultipartFile file) {
@@ -53,7 +53,7 @@ public class ProfileController {
     }
 
     @DeleteMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProfile(@AuthenticationPrincipal AppUser user) {
         try {
             profileService.deleteUserProfile(user.getId());

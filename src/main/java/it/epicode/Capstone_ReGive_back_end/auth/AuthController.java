@@ -23,13 +23,12 @@ public class AuthController {
                     registerRequest.getEmail(),
                     registerRequest.getUsername(),
                     registerRequest.getPassword(),
-                    Set.of(Role.ROLE_USER) // Assegna il ruolo di default
+                    Set.of(Role.ROLE_USER)
             );
             return ResponseEntity.ok("Registrazione avvenuta con successo");
 
         } catch (MultipleFieldsConflictException e) {
             return ResponseEntity.badRequest().body(e.getErrors());
-            // Ritorna ad esempio: {"email": "Email già in uso", "username": "Username già in uso"}
         }
     }
 

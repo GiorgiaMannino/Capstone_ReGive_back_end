@@ -10,8 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-
-
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/articles")
@@ -105,10 +103,8 @@ public class ArticleController {
         return ResponseEntity.ok(articles);
     }
 
-
-
 // ARTICOLO PER ID
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<ArticleResponse> getArticleById(@PathVariable Long id) {
         ArticleResponse article = articleService.getArticleById(id);
@@ -116,7 +112,7 @@ public class ArticleController {
     }
 
     // ARTICOLI DI ALTRI UTENTI
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
     @GetMapping("/articles/others")
     public ResponseEntity<List<ArticleResponse>> getArticlesExcludingCurrentUser() {
         List<ArticleResponse> articles = articleService.getArticlesExcludingCurrentUser();
@@ -125,7 +121,7 @@ public class ArticleController {
 
     // ARTICOLI DI UN UTENTE SPECIFICO
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
     public ResponseEntity<List<ArticleResponse>> getArticlesByUserId(@PathVariable Long userId) {
         List<ArticleResponse> articles = articleService.getArticlesByUserId(userId);
         return ResponseEntity.ok(articles);
@@ -133,10 +129,10 @@ public class ArticleController {
 
 // ELIMINAZIONE ARTICOLO
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
     public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
         articleService.deleteArticle(id);
-        return ResponseEntity.noContent().build(); // HTTP 204
+        return ResponseEntity.noContent().build();
     }
 
 

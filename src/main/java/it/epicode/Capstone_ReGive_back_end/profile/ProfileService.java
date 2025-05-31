@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProfileService {
 
     private final AppUserRepository appUserRepository;
-    private final CloudinaryService cloudinaryService;  // <-- aggiungi qui
+    private final CloudinaryService cloudinaryService;
 
     public ProfileResponse getProfile(Long userId) {
         AppUser user = appUserRepository.findById(userId)
@@ -30,7 +30,7 @@ public class ProfileService {
         AppUser user = appUserRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Utente non trovato"));
 
-        // Upload immagine su Cloudinary tramite il service
+        // Upload immagine su Cloudinary
         String imageUrl = cloudinaryService.uploadImage(imageFile);
 
         // Aggiorna URL immagine nel profilo utente
