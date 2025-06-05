@@ -20,6 +20,7 @@ public class BeforeAfterPostResponse {
     private String description;
     private List<MediaDTO> mediaFiles;
     private String authorEmail;
+    private String authorUsername;
     private int likesCount;
     private LocalDateTime createdAt;
 
@@ -40,6 +41,7 @@ public class BeforeAfterPostResponse {
                         .map(m -> new MediaDTO(m.getUrl(), m.getFileType()))
                         .collect(Collectors.toList()))
                 .authorEmail(post.getAuthor().getEmail())
+                .authorUsername(post.getAuthor().getDisplayUsername())
                 .likesCount(post.getLikedBy() != null ? post.getLikedBy().size() : 0)
                 .createdAt(post.getCreatedAt())
                 .build();

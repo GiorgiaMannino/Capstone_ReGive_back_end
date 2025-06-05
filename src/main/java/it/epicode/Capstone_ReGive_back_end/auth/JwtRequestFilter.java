@@ -79,16 +79,23 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI().substring(request.getContextPath().length());
-        return EXCLUDED_URLS.stream().anyMatch(pattern -> antPathMatcher.match(pattern, path));
+
+@Override
+protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    String path = request.getRequestURI().substring(request.getContextPath().length());
+
+    // Escludi SOLO GET su /api/articles
+    if ("GET".equalsIgnoreCase(request.getMethod()) && path.equals("/api/articles")) {
+        return true;
     }
+
+    return EXCLUDED_URLS.stream().anyMatch(pattern -> antPathMatcher.match(pattern, path));
+}
+
 
     private static final List<String> EXCLUDED_URLS = Arrays.asList(
             "/api/public",
             "/api/auth/**",
-            "/api/articles",
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/error",

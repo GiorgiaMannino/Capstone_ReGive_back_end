@@ -36,7 +36,7 @@ public class FavoriteController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public List<FavoriteResponse> getMyFavorites(@AuthenticationPrincipal AppUser user) {
         return favoriteService.getFavoritesByUser(user.getId());
     }

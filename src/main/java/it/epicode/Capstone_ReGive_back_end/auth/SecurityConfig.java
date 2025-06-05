@@ -43,7 +43,11 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/articles").permitAll()
-                        .requestMatchers("/api/articles/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/articles").hasRole("USER")
+                 /*       .requestMatchers(HttpMethod.POST, "/api/articles").hasRole("USER")*/
+
+                        /*         .requestMatchers("/api/articles/**").hasRole("USER")*/
+                        .requestMatchers("/api/articles/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
@@ -58,7 +62,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174"));
+        config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174" , "http://localhost:5175" ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

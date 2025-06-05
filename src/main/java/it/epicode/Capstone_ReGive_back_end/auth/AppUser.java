@@ -67,4 +67,8 @@ public class AppUser implements UserDetails {
     public String getUsername() {
         return this.email;
     }
+    public String getDisplayUsername() {
+        return this.username;
+    }
+
 }

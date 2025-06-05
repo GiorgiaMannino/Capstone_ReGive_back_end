@@ -60,16 +60,11 @@ public class BeforeAfterPostService {
         return postRepository.findById(id);
     }
 
-    public void deletePost(Long postId, String userEmail, Set<String> userRoles) {
+    public void deletePost(Long postId, String userEmail) {
         BeforeAfterPost post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        boolean isAuthor = post.getAuthor().getEmail().equals(userEmail);
-        boolean isAdmin = userRoles.contains("ROLE_ADMIN");
-
-        if (!isAuthor && !isAdmin) {
-            throw new AccessDeniedException("You don't have permission to delete this post");
-        }
+        // Non servono altri controlli: @PreAuthorize nel controller garantisce l'accesso
 
         // Elimina i file da Cloudinary
         for (BeforeAfterPost.MediaFile mediaFile : post.getMediaFiles()) {
@@ -78,6 +73,7 @@ public class BeforeAfterPostService {
 
         postRepository.delete(post);
     }
+
 
     public BeforeAfterPost likePost(Long postId, String userEmail) {
         BeforeAfterPost post = postRepository.findById(postId)

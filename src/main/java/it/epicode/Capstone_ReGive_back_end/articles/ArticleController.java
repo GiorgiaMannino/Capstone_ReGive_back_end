@@ -104,16 +104,19 @@ public class ArticleController {
     }
 
 // ARTICOLO PER ID
-    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
+   /* @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")*/
+
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<ArticleResponse> getArticleById(@PathVariable Long id) {
         ArticleResponse article = articleService.getArticleById(id);
         return ResponseEntity.ok(article);
     }
 
     // ARTICOLI DI ALTRI UTENTI
-    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
+/*    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")*/
     @GetMapping("/articles/others")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<ArticleResponse>> getArticlesExcludingCurrentUser() {
         List<ArticleResponse> articles = articleService.getArticlesExcludingCurrentUser();
         return ResponseEntity.ok(articleService.getArticlesExcludingCurrentUser());
@@ -121,7 +124,7 @@ public class ArticleController {
 
     // ARTICOLI DI UN UTENTE SPECIFICO
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<ArticleResponse>> getArticlesByUserId(@PathVariable Long userId) {
         List<ArticleResponse> articles = articleService.getArticlesByUserId(userId);
         return ResponseEntity.ok(articles);
@@ -129,7 +132,7 @@ public class ArticleController {
 
 // ELIMINAZIONE ARTICOLO
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
         articleService.deleteArticle(id);
         return ResponseEntity.noContent().build();

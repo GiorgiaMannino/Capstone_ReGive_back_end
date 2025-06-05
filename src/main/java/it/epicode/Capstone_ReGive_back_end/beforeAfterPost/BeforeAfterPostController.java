@@ -52,16 +52,9 @@ public class BeforeAfterPostController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @beforeAfterPostService.isAuthor(#id, principal.name)")
-
+    @PreAuthorize("hasRole('ADMIN') or @beforeAfterPostService.isAuthor(#id, authentication.name)")
     public ResponseEntity<?> deletePost(@PathVariable Long id, Principal principal) {
-        // Recupera i ruoli dell'utente autenticato
-        // Supponiamo che tu abbia una utility per ottenerli, altrimenti dovresti recuperarli dal security context
-        // Per esempio: List<String> roles = SecurityUtils.getCurrentUserRoles();
-
-        // Per semplicità qui passo un set fittizio
-        postService.deletePost(id, principal.getName(), Set.of()); // Passa i ruoli corretti se li ottieni
-
+        postService.deletePost(id, principal.getName()); // Nessun Set.of() richiesto
         return ResponseEntity.ok("Post deleted");
     }
 
