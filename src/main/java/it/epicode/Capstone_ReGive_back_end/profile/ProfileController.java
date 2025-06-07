@@ -21,6 +21,7 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
+    // TUTTI I PROFILI
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProfileResponse>> getAllProfiles() {
@@ -28,21 +29,22 @@ public class ProfileController {
         return ResponseEntity.ok(profiles);
     }
 
-
+    // PROFILI INDIVIDUALI
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ProfileResponse> getProfile(@AuthenticationPrincipal AppUser user) {
         return ResponseEntity.ok(profileService.getProfile(user.getId()));
     }
 
+    // PROFILO UTENTE CON ID
     @GetMapping("/users/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<ProfileResponse> getUserProfileById(@PathVariable Long userId) {
         return ResponseEntity.ok(profileService.getProfile(userId));
     }
 
+    // AGGIORNA IMMAGINE
     @PutMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-/*    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")*/
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<ProfileResponse> updateProfileImage(
             @AuthenticationPrincipal AppUser user,
@@ -55,6 +57,7 @@ public class ProfileController {
         }
     }
 
+    // AGGIORNA DATI PROFILO
     @PutMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ProfileResponse> updateProfile(
@@ -65,27 +68,28 @@ public class ProfileController {
         return ResponseEntity.ok(updatedProfile);
     }
 
+    // ELIMINA PROFILO
     @DeleteMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deleteProfile(@AuthenticationPrincipal AppUser user) {
         try {
             profileService.deleteUserProfile(user.getId());
-            return ResponseEntity.noContent().build(); // HTTP 204
+            return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            e.printStackTrace(); // Per il debug
+            e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
     }
 
+    // ELIMINA PROFILO SE ADMIN
     @DeleteMapping("/admin/users/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteOtherUserProfile(
             @PathVariable Long userId,
             @AuthenticationPrincipal AppUser currentUser) {
         try {
-            // L’admin NON può eliminare sé stesso
             if (currentUser.getId().equals(userId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
@@ -98,7 +102,6 @@ public class ProfileController {
             return ResponseEntity.status(500).build();
         }
     }
-
 
 
 }

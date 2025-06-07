@@ -13,6 +13,5 @@ public class BeforeAfterPostRequest {
     private String title;
     private String description;
 
-    // Lista di file caricati (foto/video)
     private List<MultipartFile> files;
 }

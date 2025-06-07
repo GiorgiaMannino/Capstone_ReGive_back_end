@@ -32,11 +32,9 @@ public class AppUserService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    /**
-     * Registra un nuovo utente con validazione dei campi.
-     */
+
     @Transactional
-    public void registerUser(String email, String username, String password, Set<Role> roles) {
+    public AppUser registerUser(String email, String username, String password, Set<Role> roles) {
         Map<String, String> errors = new HashMap<>();
 
         if (email == null || email.isBlank() || !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
@@ -56,7 +54,7 @@ public class AppUserService {
         }
 
         if (!errors.isEmpty()) {
-            System.out.println("❌ Errori nella registrazione utente:");
+            System.out.println("Errori nella registrazione utente:");
             errors.forEach((k, v) -> System.out.println("- " + k + ": " + v));
             throw new MultipleFieldsConflictException(errors);
         }
@@ -67,7 +65,8 @@ public class AppUserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setRoles(roles);
 
-        appUserRepository.save(user);
+        AppUser savedUser = appUserRepository.save(user);
+        return savedUser;
     }
 
     private boolean isValidPassword(String password) {
@@ -76,7 +75,6 @@ public class AppUserService {
                 password.matches(".*[A-Z].*") &&
                 password.matches(".*\\d.*");
     }
-
 
 
     public String authenticateUser(String email, String password) {
@@ -90,7 +88,6 @@ public class AppUserService {
             throw new BadCredentialsException("Credenziali non valide");
         }
     }
-
 
 
     public Optional<AppUser> findByUsername(String username) {

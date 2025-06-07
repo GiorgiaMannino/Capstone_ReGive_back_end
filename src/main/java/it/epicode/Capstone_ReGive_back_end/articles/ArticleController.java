@@ -103,9 +103,7 @@ public class ArticleController {
         return ResponseEntity.ok(articles);
     }
 
-// ARTICOLO PER ID
-   /* @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")*/
-
+    // ARTICOLO PER ID
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<ArticleResponse> getArticleById(@PathVariable Long id) {
@@ -114,7 +112,6 @@ public class ArticleController {
     }
 
     // ARTICOLI DI ALTRI UTENTI
-/*    @PreAuthorize("hasRole('USER') and hasRole('ADMIN')")*/
     @GetMapping("/articles/others")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<ArticleResponse>> getArticlesExcludingCurrentUser() {
@@ -130,7 +127,7 @@ public class ArticleController {
         return ResponseEntity.ok(articles);
     }
 
-// ELIMINAZIONE ARTICOLO
+    // ELIMINAZIONE ARTICOLO
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {

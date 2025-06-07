@@ -15,4 +15,5 @@ public class ArticleResponse {
     private String category;
     private String username;
     private Long userId;
+    private long likesCount;
 }

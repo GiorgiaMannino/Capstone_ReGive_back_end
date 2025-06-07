@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -30,7 +31,6 @@ public class BeforeAfterPostService {
         for (MultipartFile file : files) {
             String url = cloudinaryService.uploadImage(file);
 
-            // Determina tipo file (image/video)
             String fileType = "";
             if (file.getContentType() != null && file.getContentType().startsWith("image")) {
                 fileType = "image";
@@ -64,8 +64,6 @@ public class BeforeAfterPostService {
         BeforeAfterPost post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        // Non servono altri controlli: @PreAuthorize nel controller garantisce l'accesso
-
         // Elimina i file da Cloudinary
         for (BeforeAfterPost.MediaFile mediaFile : post.getMediaFiles()) {
             cloudinaryService.deleteImage(mediaFile.getUrl());
@@ -98,5 +96,30 @@ public class BeforeAfterPostService {
                 .orElseThrow(() -> new RuntimeException("Post not found"));
         return post.getAuthor().getEmail().equals(userEmail);
     }
+
+    public BeforeAfterPost addComment(Long postId, String content, String userEmail) {
+        BeforeAfterPost post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        AppUser user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        BeforeAfterPost.Comment comment = new BeforeAfterPost.Comment(
+                user.getDisplayUsername(),
+                user.getEmail(),
+                content,
+                LocalDateTime.now()
+        );
+
+        post.getComments().add(comment);
+        return postRepository.save(post);
+    }
+
+    public List<BeforeAfterPost.Comment> getComments(Long postId) {
+        BeforeAfterPost post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        return post.getComments();
+    }
+
 
 }

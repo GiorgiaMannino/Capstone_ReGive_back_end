@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -15,17 +17,27 @@ import java.util.Set;
 public class AuthController {
 
     private final AppUserService appUserService;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register( @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
-            appUserService.registerUser(
+            AppUser newUser = appUserService.registerUser(
                     registerRequest.getEmail(),
                     registerRequest.getUsername(),
                     registerRequest.getPassword(),
                     Set.of(Role.ROLE_USER)
             );
-            return ResponseEntity.ok("Registrazione avvenuta con successo");
+
+            String token = jwtTokenUtil.generateToken(newUser);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("id", newUser.getId());
+            response.put("username", newUser.getUsername());
+            response.put("email", newUser.getEmail());
+
+            return ResponseEntity.ok(response);
 
         } catch (MultipleFieldsConflictException e) {
             return ResponseEntity.badRequest().body(e.getErrors());

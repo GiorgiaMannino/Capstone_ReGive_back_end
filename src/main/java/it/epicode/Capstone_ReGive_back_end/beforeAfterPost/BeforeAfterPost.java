@@ -39,6 +39,12 @@ public class BeforeAfterPost {
 
     private LocalDateTime createdAt;
 
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @OrderBy("createdAt ASC")
+    private List<Comment> comments = new ArrayList<>();
+
+
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
@@ -51,7 +57,22 @@ public class BeforeAfterPost {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MediaFile {
-        private String url;       // URL file caricato
-        private String fileType;  // "image" oppure "video"
+        private String url;
+        private String fileType;
+    }
+
+    @Embeddable
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Comment {
+        private String authorUsername;
+        private String authorEmail;
+
+        @Column(length = 1000)
+        private String content;
+
+        private LocalDateTime createdAt;
     }
 }

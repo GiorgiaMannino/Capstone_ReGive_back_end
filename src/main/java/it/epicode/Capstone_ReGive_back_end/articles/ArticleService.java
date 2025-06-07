@@ -144,6 +144,7 @@ public class ArticleService {
                 .category(article.getCategory().toString())
                 .username(article.getUser().getUsername())
                 .userId(article.getUser().getId())
+                .likesCount(favoriteRepository.countByArticle(article))
                 .build();
     }
 
@@ -184,10 +185,10 @@ public class ArticleService {
                         .category(article.getCategory().toString())
                         .username(article.getUser().getUsername())
                         .userId(article.getUser().getId())
+                        .likesCount(favoriteRepository.countByArticle(article))
                         .build())
                 .collect(Collectors.toList());
     }
-
 
 
     public List<ArticleResponse> getArticlesByUserId(Long userId) {
@@ -202,10 +203,10 @@ public class ArticleService {
                         .imageUrls(article.getImageUrls())
                         .username(article.getUser().getUsername())
                         .userId(article.getUser().getId())
+                        .likesCount(favoriteRepository.countByArticle(article))
                         .build())
                 .collect(Collectors.toList());
     }
-
 
 
     public void deleteArticle(Long id) {

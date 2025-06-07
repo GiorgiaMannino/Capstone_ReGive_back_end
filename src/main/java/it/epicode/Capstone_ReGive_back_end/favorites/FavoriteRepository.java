@@ -14,4 +14,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     Optional<Favorite> findByUserAndArticle(AppUser user, Article article);
     void deleteByUserAndArticle(AppUser user, Article article);
     void deleteByUserId(Long userId);
+    long countByArticle(Article article);
+
 }

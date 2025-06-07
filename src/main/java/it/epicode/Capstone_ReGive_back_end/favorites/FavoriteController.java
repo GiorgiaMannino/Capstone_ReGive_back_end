@@ -18,6 +18,7 @@ public class FavoriteController {
         this.favoriteService = favoriteService;
     }
 
+    // AGGIUNGI PREFERITO
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<FavoriteResponse> addFavorite(
@@ -26,6 +27,7 @@ public class FavoriteController {
         return ResponseEntity.ok(favoriteService.addFavorite(user.getId(), request));
     }
 
+    // RIMUOVI PREFERITO
     @DeleteMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> removeFavorite(
@@ -35,6 +37,7 @@ public class FavoriteController {
         return ResponseEntity.noContent().build();
     }
 
+    // OTTIENI PREFERITI
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public List<FavoriteResponse> getMyFavorites(@AuthenticationPrincipal AppUser user) {
