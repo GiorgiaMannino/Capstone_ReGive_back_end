@@ -46,11 +46,12 @@ public class PaymentController {
 
         // invio email
         try {
-            String subject = "Pagamento andato a buon fine su ReGive ✔️";
-            String body = "<h2>Ciao!</h2>" +
+            String subject = "Conferma di pagamento - ReGive ️";
+            String body = "<h2>Pagamento andato a buon fine su ReGive ✔️</h2>" +
                     "<p>Grazie per aver completato il pagamento su <strong>ReGive</strong> — la web app che rende semplice donare oggetti usati, prolungandone il ciclo di vita e diffondendo il valore del riuso.</p>" +
                     "<p>Il tuo pagamento di <strong>" + (amount / 100.0) + "€</strong> è stato effettuato con successo.</p>" +
                     "<hr>" +
+                    "<br>" +
                     "<p>Siamo felici di averti con noi in questo percorso verso un riuso consapevole e sostenibile.</p>" +
                     "<p>Grazie per fare la differenza con ReGive! 🌱</p>" +
                     "<br>" +

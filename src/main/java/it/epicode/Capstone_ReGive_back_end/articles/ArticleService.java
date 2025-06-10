@@ -79,6 +79,7 @@ public class ArticleService {
                         .category(article.getCategory().toString())
                         .username(article.getUser().getUsername())
                         .userId(article.getUser().getId())
+                        .likesCount(favoriteRepository.countByArticle(article))
                         .build())
 
                 .collect(Collectors.toList());
@@ -111,6 +112,7 @@ public class ArticleService {
                 .category(article.getCategory().toString())
                 .username(article.getUser().getUsername())
                 .userId(article.getUser().getId())
+
                 .build();
 
     }
@@ -127,6 +129,7 @@ public class ArticleService {
                         .category(article.getCategory().toString())
                         .username(article.getUser().getUsername())
                         .userId(article.getUser().getId())
+                        .likesCount(favoriteRepository.countByArticle(article))
                         .build())
 
                 .collect(Collectors.toList());
